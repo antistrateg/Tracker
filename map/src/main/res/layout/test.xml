@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="80dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    >
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addSingleLocationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="150dp"
+        android:src="@drawable/ic_dashboard_black_24dp"
+        app:backgroundTint="#FFF"
+        app:rippleColor="#FF0"
+        />
+
+    <ProgressBar
+        android:id="@+id/addSingleLocationProgressBar"
+        android:elevation="10dp"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        app:layout_anchor="@id/addSingleLocationButton"
+        app:layout_anchorGravity="center"
+        android:visibility="gone"
+        />
+
+    <LinearLayout
+        android:id="@+id/behaviorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_top_rounded"
+        android:orientation="vertical"
+        android:elevation="20dp"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="100dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <View
+            android:layout_width="110dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:background="@drawable/rectangle_swipe_down" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="Locations"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            >
+
+            <TextView
+                android:id="@+id/locationsInformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
+                tools:text="information massage"
+                />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/locationsShimmerLoader"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:shimmer_duration="1000">
+
+                <View
+                    android:background="#999"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+
+        </FrameLayout>
+
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_margin="0dp"
+            android:background="@drawable/bg_shadow" />
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="22dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/locationsRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:overScrollMode="never"
+                        android:scrollbars="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/view_locations_item" />
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <Button
+                android:id="@+id/locationsDeleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:text="Очистить"
+                android:background="@null"
+                android:visibility="gone"
+                android:elevation="20dp"
+                android:layout_gravity="bottom|center_horizontal"
+                />
+
+        </FrameLayout>
+
+
+
+
+
+
+    </LinearLayout>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

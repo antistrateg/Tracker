@@ -1,0 +1,2 @@
+include ':app', ':splash', ':map', ':cache'
+rootProject.name='Tracker'

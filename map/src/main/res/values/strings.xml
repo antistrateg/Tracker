@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">map</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="tracks">Tracks</string>
+    <string name="locations">Locations</string>
+    <string name="beacons">Beacons</string>
+</resources>
