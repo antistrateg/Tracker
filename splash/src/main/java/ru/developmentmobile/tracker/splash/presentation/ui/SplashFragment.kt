@@ -6,17 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-//import org.koin.android.ext.android.inject
-//import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import ru.developmentmobile.tracker.splash.R
-//import ru.developmentmobile.tracker.splash.presentation.router.SplashRouter
+import ru.developmentmobile.tracker.splash.presentation.router.SplashRouter
 import ru.developmentmobile.tracker.splash.presentation.ui.viewmodels.SplashUiEvents
 import ru.developmentmobile.tracker.splash.presentation.ui.viewmodels.SplashUiModel
 
 class SplashFragment : Fragment() {
 
-    //private val router: SplashRouter by inject()
-    //private val viewModel: SplashViewModel by sharedViewModel()
+    private val router: SplashRouter by inject()
+    private val viewModel: SplashViewModel by sharedViewModel()
     private val updateDataObserver = Observer<SplashUiModel> { handleUiData(it) }
 
     override fun onCreateView(
@@ -31,9 +31,9 @@ class SplashFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        //viewModel.uiData.observe(this, updateDataObserver)
+        viewModel.uiData.observe(viewLifecycleOwner, updateDataObserver)
 
-//        postEvent(SplashUiEvents.StartSplashTimer(SPLASH_DELAY_TIME))
+        postEvent(SplashUiEvents.StartSplashTimer(SPLASH_DELAY_TIME))
     }
 
     private fun handleUiData(data: SplashUiModel) {
@@ -42,7 +42,7 @@ class SplashFragment : Fragment() {
             }
             is SplashUiModel.Loading -> {
                 if (data.isSplashVisible.not()) {
-                    //router.navigateNextToSplash(this)
+                    router.navigateNextToSplash(this)
                 }
             }
             is SplashUiModel.Error -> {
@@ -50,7 +50,7 @@ class SplashFragment : Fragment() {
         }
     }
 
-    //private fun postEvent(event: SplashUiEvents) = viewModel.uiEvents.postValue(event)
+    private fun postEvent(event: SplashUiEvents) = viewModel.uiEvents.postValue(event)
 
     companion object {
         private const val SPLASH_DELAY_TIME: Long = 1500
