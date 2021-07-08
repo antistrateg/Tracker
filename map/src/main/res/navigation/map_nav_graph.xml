@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map_nav_graph"
+    app:startDestination="@id/mapActivity"
+    tools:ignore="UnusedNavigation">
+
+    <activity
+        android:id="@+id/mapActivity"
+        android:name="ru.developmentmobile.tracker.map.presentation.ui.MapActivity"
+        android:label="MapActivity"
+        tools:layout="@layout/activity_map" />
+
+</navigation>

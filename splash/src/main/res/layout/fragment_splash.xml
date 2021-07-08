@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/splash_bg">
+
+    <ImageView
+        android:id="@+id/iv_splash_logo"
+        android:layout_width="@dimen/splash_logo_size"
+        android:layout_height="@dimen/splash_logo_size"
+        android:layout_gravity="center"
+        android:contentDescription="@string/splash_logo_description"
+        android:src="@drawable/ic_splash_logo" />
+    <TextView
+        android:id="@+id/tv_item_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/splash_text"
+        android:textSize="@dimen/splash_text_size"
+        android:textStyle="bold"
+        android:textColor="@color/splash_text"/>
+
+</LinearLayout>
