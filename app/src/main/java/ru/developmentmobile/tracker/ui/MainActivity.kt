@@ -1,7 +1,8 @@
-package ru.developmentmobile.tracker
+package ru.developmentmobile.tracker.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import ru.developmentmobile.tracker.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
