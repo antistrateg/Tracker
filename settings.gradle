@@ -1,3 +1,4 @@
 rootProject.name = "Tracker"
 include ':app'
 include ':splash'
+include ':map'
