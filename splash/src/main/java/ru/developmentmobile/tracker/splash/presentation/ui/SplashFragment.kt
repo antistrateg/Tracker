@@ -1,6 +1,7 @@
 package ru.developmentmobile.tracker.splash.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,7 @@ import ru.developmentmobile.tracker.splash.presentation.ui.viewmodels.SplashUiMo
 
 class SplashFragment : Fragment() {
 
-    private val router: SplashRouter by inject()
+    //private val router: SplashRouter by inject()
     private val viewModel: SplashViewModel by sharedViewModel()
     private val updateDataObserver = Observer<SplashUiModel> { handleUiData(it) }
 
@@ -23,7 +24,7 @@ class SplashFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = TODO()//inflater.inflate(R.layout.fragment_splash, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_splash, container, false)
 
     override fun onViewCreated(
         view: View,
@@ -42,7 +43,8 @@ class SplashFragment : Fragment() {
             }
             is SplashUiModel.Loading -> {
                 if (data.isSplashVisible.not()) {
-                    router.navigateNextToSplash(this)
+                    //router.navigateNextToSplash(this)
+                    Log.d("TEST_MESSAGE","navigate to main screen")
                 }
             }
             is SplashUiModel.Error -> {
@@ -53,6 +55,6 @@ class SplashFragment : Fragment() {
     private fun postEvent(event: SplashUiEvents) = viewModel.uiEvents.postValue(event)
 
     companion object {
-        private const val SPLASH_DELAY_TIME: Long = 1500
+        private const val SPLASH_DELAY_TIME: Long = 3000
     }
 }

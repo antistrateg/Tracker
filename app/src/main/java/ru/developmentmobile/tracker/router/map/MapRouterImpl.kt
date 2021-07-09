@@ -7,6 +7,6 @@ import ru.developmentmobile.tracker.map.presentation.router.MapRouter
 
 class MapRouterImpl : MapRouter {
     override fun navigateNextToMap(fragment: Fragment) {
-        fragment.findNavController().navigate(R.id.mapFragment)
+//        fragment.findNavController().navigate(R.id.mapFragment)
     }
 }

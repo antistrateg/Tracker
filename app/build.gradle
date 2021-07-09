@@ -36,9 +36,19 @@ dependencies {
     implementation project(":splash")
     implementation project(":map")
 
+    // Koin for Kotlin apps
+    implementation "io.insert-koin:koin-core:$koin_version"
+    // Android koin
+    implementation "io.insert-koin:koin-android:$koin_version"
+
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // lifecycle
+//    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+//    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+//    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
 
 

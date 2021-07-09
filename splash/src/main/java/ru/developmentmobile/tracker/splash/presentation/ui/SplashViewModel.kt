@@ -1,8 +1,8 @@
 package ru.developmentmobile.tracker.splash.presentation.ui
 
 import androidx.lifecycle.*
-//import kotlinx.coroutines.delay
-//import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.developmentmobile.tracker.splash.presentation.ui.viewmodels.SplashDataFactory
 import ru.developmentmobile.tracker.splash.presentation.ui.viewmodels.SplashDataHolder
 import ru.developmentmobile.tracker.splash.presentation.ui.viewmodels.SplashUiEvents
@@ -36,11 +36,11 @@ class SplashViewModel: ViewModel() {
     }
 
     private fun startSplashTimer(delayTime: Long) {
-        /*viewModelScope.launch {
+        viewModelScope.launch {
             delay(delayTime)
             cachedData.isSplashVisible = false
             postValue()
-        }*/
+        }
     }
 
     private fun postValue() = uiDataMutable.postValue(factory.createUiLoading(cachedData))
