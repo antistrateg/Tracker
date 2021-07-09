@@ -15,7 +15,7 @@ class MapActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_map)
+        setContentView(R.layout.activity_map)
 
         //postEvent(MapUiEvents.CreateSection(START_DESTINATION_SECTION))
         //navigationView.selectedItemId = START_DESTINATION_SECTION.id

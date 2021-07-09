@@ -16,7 +16,7 @@ import ru.developmentmobile.tracker.splash.presentation.ui.viewmodels.SplashUiMo
 
 class SplashFragment : Fragment() {
 
-    //private val router: SplashRouter by inject()
+    private val router: SplashRouter by inject()
     private val viewModel: SplashViewModel by sharedViewModel()
     private val updateDataObserver = Observer<SplashUiModel> { handleUiData(it) }
 
@@ -43,8 +43,7 @@ class SplashFragment : Fragment() {
             }
             is SplashUiModel.Loading -> {
                 if (data.isSplashVisible.not()) {
-                    //router.navigateNextToSplash(this)
-                    Log.d("TEST_MESSAGE","navigate to main screen")
+                    router.navigateNextToSplash(this)
                 }
             }
             is SplashUiModel.Error -> {
