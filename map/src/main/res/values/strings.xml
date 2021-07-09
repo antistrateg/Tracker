@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">map</string>
+
+    <string name="tracks">Треки</string>
+    <string name="locations">Локации</string>
+    <string name="beacons">Маячки</string>
+</resources>
