@@ -1,6 +1,7 @@
 package ru.developmentmobile.tracker.map.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,10 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.android.synthetic.main.fragment_map.*
+import ru.developmentmobile.tracker.map.extension.inflateSectionView
 import ru.developmentmobile.tracker.map.presentation.router.MapRouter
+import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiEvents
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiModel
 import java.util.*
 
@@ -24,6 +28,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val viewModel: MapViewModel by sharedViewModel()
     private val updateDataObserver = Observer<MapUiModel> { handleUiData(it) }
 
+    lateinit var sectionView: View
     private lateinit var googleMap: GoogleMap
 
     override fun onCreateView(
@@ -38,11 +43,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.uiData.observe(viewLifecycleOwner, updateDataObserver)
-
         val mapFragment =
             childFragmentManager.findFragmentById(R.id.mapContainer) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        viewModel.uiData.observe(viewLifecycleOwner, updateDataObserver)
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -65,18 +70,44 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         )
     }
 
-
     private fun handleUiData(mapUiModel: MapUiModel) {
-//        w+hen (mapUiModel) {
-//        }
+        when (mapUiModel) {
+            is MapUiModel.CreateSection -> {
+                val section = mapUiModel.section
+                sectionView = requireContext().inflateSectionView(section.layout, section_container)
+                when (section) {
+                    Section.TRACKS -> createSectionTracks()
+                    Section.LOCATIONS -> createSectionLocations()
+                    Section.BEACON -> createSectionBeacons()
+                }
+//                postEvent(MapUiEvents.LoadSectionData(section))
+            }
+        }
     }
 
+    //================== CREATE ===========================================
+    private fun createSectionTracks() {
+        //TODO
+    }
+
+    private fun createSectionLocations() {
+        //TODO
+    }
+
+    private fun createSectionBeacons() {
+        //TODO
+    }
+
+
+    private fun postEvent(event: MapUiEvents) = viewModel.uiEvents.postValue(event)
+
+
     enum class Section(
-        val id: Int
+        val id: Int, val layout: Int
     ) {
-        TRACKS(R.id.tracks),
-        LOCATIONS(R.id.locations),
-        BEACON(R.id.beacons);
+        TRACKS(R.id.tracks, R.layout.view_tracks),
+        LOCATIONS(R.id.locations, R.layout.view_locations),
+        BEACON(R.id.beacons, R.layout.view_beacons);
 
         companion object {
             fun convertIdToEnumSection(id: Int) =

@@ -1,6 +1,9 @@
 package ru.developmentmobile.tracker.map.presentation.ui
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapDataFactory
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapDataHolder
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiEvents
@@ -26,8 +29,15 @@ class MapViewModel(
     }
 
     private fun handleUiEvents(mapUiEvents: MapUiEvents) {
+        when (mapUiEvents) {
+            is MapUiEvents.CreateSection -> {
+                cachedData.section = mapUiEvents.section
+                postValue(MapUiModel.CreateSection())
+            }
 
+        }
     }
+
 
     private fun postValue(mapUiModel: MapUiModel) =
         uiDataMutable.postValue(factory.createUiModel(cachedData, mapUiModel))
