@@ -4,6 +4,7 @@ import ru.developmentmobile.tracker.map.presentation.ui.MapFragment
 
 data class MapDataHolder(
 
-    var section: MapFragment.Section = MapFragment.Section.TRACKS
+    var section: MapFragment.Section = MapFragment.Section.TRACKS,
+    var needToLoadMarkers: Boolean = false
 
 )

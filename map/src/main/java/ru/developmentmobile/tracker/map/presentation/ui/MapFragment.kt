@@ -85,7 +85,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     Section.LOCATIONS -> createSectionLocations()
                     Section.BEACON -> createSectionBeacons()
                 }
-//                postEvent(MapUiEvents.LoadSectionData(section))
+                postEvent(MapUiEvents.LoadSectionData(section))
+            }
+            is MapUiModel.LoadSectionData -> {
+                when (mapUiModel.section) {
+                    Section.TRACKS -> loadSectionDataTracks()
+                    Section.LOCATIONS ->
+                        loadSectionDataLocations(mapUiModel.needToLoadMarkers)
+                    Section.BEACON -> loadSectionDataBeacons()
+                }
             }
         }
     }
@@ -101,6 +109,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private fun createSectionBeacons() {
         //TODO
+    }
+
+    //================== LOAD SECTION DATA =================================
+    private fun loadSectionDataTracks() {
+
+    }
+    private fun loadSectionDataLocations(needToLoadMarkers: Boolean) {
+
+    }
+    private fun loadSectionDataBeacons() {
+
     }
 
 

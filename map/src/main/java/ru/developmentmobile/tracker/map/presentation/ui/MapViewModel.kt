@@ -34,8 +34,26 @@ class MapViewModel(
                 cachedData.section = mapUiEvents.section
                 postValue(MapUiModel.CreateSection())
             }
+            is MapUiEvents.LoadSectionData -> {
+                cachedData.section = mapUiEvents.section
+                when (cachedData.section) {
+                    MapFragment.Section.TRACKS -> loadTracks()
+                    MapFragment.Section.LOCATIONS -> loadLocations(true)
+                    MapFragment.Section.BEACON -> loadBeacons()
+                }
+            }
 
         }
+    }
+
+    private fun loadTracks() {
+
+    }
+    private fun loadLocations(needToLoadMarkers: Boolean) {
+
+    }
+    private fun loadBeacons() {
+
     }
 
 

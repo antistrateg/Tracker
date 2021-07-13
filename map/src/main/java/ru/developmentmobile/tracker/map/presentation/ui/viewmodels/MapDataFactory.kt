@@ -10,6 +10,12 @@ class MapDataFactory {
                     section = data.section
                 )
             }
+            is MapUiModel.LoadSectionData -> {
+                MapUiModel.LoadSectionData(
+                    section = data.section,
+                    needToLoadMarkers = data.needToLoadMarkers
+                )
+            }
         }
 
 }

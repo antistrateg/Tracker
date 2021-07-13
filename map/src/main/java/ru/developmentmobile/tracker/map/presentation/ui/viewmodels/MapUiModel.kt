@@ -8,4 +8,9 @@ sealed class MapUiModel {
         var section: MapFragment.Section = MapFragment.Section.TRACKS
     ) : MapUiModel()
 
+    data class LoadSectionData(
+        var section: MapFragment.Section = MapFragment.Section.TRACKS,
+        var needToLoadMarkers: Boolean = false
+    ) : MapUiModel()
+
 }
