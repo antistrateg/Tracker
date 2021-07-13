@@ -33,6 +33,6 @@ class MapActivity : AppCompatActivity() {
 
     companion object {
         @IdRes val MAP_NAVIGATION_ID = R.id.map_nav_graph
-        private val START_DESTINATION_SECTION = Section.TRACKS
+        private val START_DESTINATION_SECTION = Section.LOCATIONS
     }
 }

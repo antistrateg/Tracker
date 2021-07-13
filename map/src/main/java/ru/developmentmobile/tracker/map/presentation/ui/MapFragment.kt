@@ -1,10 +1,14 @@
 package ru.developmentmobile.tracker.map.presentation.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -30,6 +34,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     lateinit var sectionView: View
     private lateinit var googleMap: GoogleMap
+    private lateinit var doIfLocationPermissionGranted: () -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -101,6 +106,33 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private fun postEvent(event: MapUiEvents) = viewModel.uiEvents.postValue(event)
 
+    private fun checkLocationPermission() {
+
+        val permissionStatus =
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
+            doIfLocationPermissionGranted()
+        } else {
+            requireActivity().requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_CODE_PERMISSION_FINE_LOCATION
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            REQUEST_CODE_PERMISSION_FINE_LOCATION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    doIfLocationPermissionGranted()
+                }
+            }
+        }
+    }
 
     enum class Section(
         val id: Int, val layout: Int
