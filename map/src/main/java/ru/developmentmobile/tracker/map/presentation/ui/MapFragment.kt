@@ -20,6 +20,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_map.*
+import ru.developmentmobile.tracker.map.domain.model.MapBeacon
+import ru.developmentmobile.tracker.map.domain.model.MapLocation
+import ru.developmentmobile.tracker.map.domain.model.MapTrack
 import ru.developmentmobile.tracker.map.extension.inflateSectionView
 import ru.developmentmobile.tracker.map.presentation.router.MapRouter
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiEvents
@@ -89,10 +92,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
             is MapUiModel.LoadSectionData -> {
                 when (mapUiModel.section) {
-                    Section.TRACKS -> loadSectionDataTracks()
+                    Section.TRACKS -> loadSectionDataTracks(mapUiModel.tracks)
                     Section.LOCATIONS ->
-                        loadSectionDataLocations(mapUiModel.needToLoadMarkers)
-                    Section.BEACON -> loadSectionDataBeacons()
+                        loadSectionDataLocations(mapUiModel.locations, mapUiModel.needToLoadMarkers)
+                    Section.BEACON -> loadSectionDataBeacons(mapUiModel.beacons, mapUiModel.beacon)
                 }
             }
         }
@@ -112,13 +115,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     //================== LOAD SECTION DATA =================================
-    private fun loadSectionDataTracks() {
+    private fun loadSectionDataTracks(tracks: List<MapTrack>) {
 
     }
-    private fun loadSectionDataLocations(needToLoadMarkers: Boolean) {
+    private fun loadSectionDataLocations(locations: List<MapLocation>, needToLoadMarkers: Boolean) {
 
     }
-    private fun loadSectionDataBeacons() {
+    private fun loadSectionDataBeacons(beacons: List<MapBeacon>, selected: MapBeacon? = null) {
 
     }
 

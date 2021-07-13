@@ -13,7 +13,11 @@ class MapDataFactory {
             is MapUiModel.LoadSectionData -> {
                 MapUiModel.LoadSectionData(
                     section = data.section,
-                    needToLoadMarkers = data.needToLoadMarkers
+                    tracks = data.tracks,
+                    locations = data.locations,
+                    needToLoadMarkers = data.needToLoadMarkers,
+                    beacons = data.beacons,
+                    beacon = data.beacon
                 )
             }
         }
