@@ -6,6 +6,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import ru.developmentmobile.tracker.map.data.cache.MapCacheDataSource
 import ru.developmentmobile.tracker.map.data.remote.MapRemoteDataSource
+import ru.developmentmobile.tracker.map.data.repository.MapRepositoryImpl
 import ru.developmentmobile.tracker.map.datasourse.cache.MapCacheDataSourceImpl
 import ru.developmentmobile.tracker.map.datasourse.remote.MapApi
 import ru.developmentmobile.tracker.map.datasourse.remote.MapRemoteDataSourceImpl
@@ -13,6 +14,7 @@ import ru.developmentmobile.tracker.map.presentation.ui.MapViewModel
 import ru.developmentmobile.tracker.map.domain.interactor.MapBeaconInteractor
 import ru.developmentmobile.tracker.map.domain.interactor.MapLocationInteractor
 import ru.developmentmobile.tracker.map.domain.interactor.MapTrackInteractor
+import ru.developmentmobile.tracker.map.domain.repository.MapRepository
 import ru.developmentmobile.tracker.map.network.NetworkClient
 
 fun injectFeatureMap() = loadFeature
@@ -39,6 +41,12 @@ private val apiModule: Module = module {
     factory { MapLocationInteractor() }
     factory { MapBeaconInteractor() }
 
+    factory <MapRepository> {
+        MapRepositoryImpl(
+            cacheDataSource = get(),
+            remoteDataSource = get()
+        )
+    }
 
     single { NetworkClient() }
 
