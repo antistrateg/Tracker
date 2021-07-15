@@ -1,10 +1,13 @@
 package ru.developmentmobile.tracker.map.presentation.ui
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.developmentmobile.tracker.map.domain.model.MapLocation
+import ru.developmentmobile.tracker.map.domain.model.MapPoint
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapDataFactory
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapDataHolder
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiEvents
@@ -64,7 +67,7 @@ class MapViewModel(
             cachedData.needToLoadMarkers = needToLoadMarkers
             postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
             delay(50)
-            //cachedData.locations = mapLocationInteractor.getLocations()
+            //cachedData.locations = listOf(MapLocation(1,MapPoint(0.0,0.0),"",""))// mapLocationInteractor.getLocations()
             delay(1000)
             if (cachedData.section == MapFragment.Section.LOCATIONS) {
                 postValue(MapUiModel.LoadSectionData())

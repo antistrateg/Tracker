@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.view_locations.view.*
 import kotlinx.android.synthetic.main.view_tracks.view.*
 import ru.developmentmobile.tracker.map.domain.model.MapBeacon
 import ru.developmentmobile.tracker.map.domain.model.MapLocation
+import ru.developmentmobile.tracker.map.domain.model.MapPoint
 import ru.developmentmobile.tracker.map.domain.model.MapTrack
 import ru.developmentmobile.tracker.map.extension.inflateSectionView
 import ru.developmentmobile.tracker.map.presentation.router.MapRouter
@@ -88,6 +89,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         Log.d("TAG", mapUiModel.toString())
         when (mapUiModel) {
             is MapUiModel.CreateSection -> {
+                //googleMap.clear()
                 val section = mapUiModel.section
                 sectionView = requireContext().inflateSectionView(section.layout, section_container)
                 when (section) {
@@ -131,15 +133,37 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     //================== CREATE ===========================================
     private fun createSectionTracks() {
-        //TODO
+        sectionView.tracksRecycler.adapter = TracksAdapter(
+            { track -> postEvent(MapUiEvents.ClickTrackItem(track)) },
+            { track -> postEvent(MapUiEvents.DeleteTrack(track)) }
+        )
+        sectionView.tracksDeleteButton.setOnClickListener { postEvent(MapUiEvents.DeleteTracks) }
+        sectionView.recordTrackButton.setOnClickListener {
+            doIfLocationPermissionGranted = { recordTrack() }
+            checkLocationPermission()
+        }
     }
 
     private fun createSectionLocations() {
-        //TODO
+        sectionView.locationsRecycler.adapter = LocationsAdapter(
+            { locationId -> postEvent(MapUiEvents.ClickLocationItem(locationId)) },
+            { locationId -> postEvent(MapUiEvents.DeleteLocation(locationId)) }
+        )
+        sectionView.locationsDeleteButton.setOnClickListener { postEvent(MapUiEvents.DeleteLocations) }
+        sectionView.addSingleLocationButton.setOnClickListener {
+            doIfLocationPermissionGranted = { addSingleLocation() }
+            checkLocationPermission()
+        }
     }
 
     private fun createSectionBeacons() {
-        //TODO
+        sectionView.beaconsRecycler.adapter =
+            BeaconsAdapter { beacon, isSelected ->
+                if (isSelected.not()) postEvent(MapUiEvents.ClickBeaconItem(beacon))
+            }
+        sectionView.observeBeaconButton.setOnClickListener {
+            postEvent(MapUiEvents.ObserveBeacon)
+        }
     }
 
     //================== LOAD SECTION DATA =================================
@@ -160,6 +184,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         //запись трека
     }
     private fun loadSectionDataLocations(locations: List<MapLocation>, needToLoadMarkers: Boolean) {
+        Log.d("TAG", locations.toString())
         (sectionView.locationsRecycler.adapter as LocationsAdapter).update(locations)
 
         if (locations.isNotEmpty()) {
@@ -200,6 +225,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             sectionView.beaconsInformation.text = resources.getString(R.string.no_beacons)
             sectionView.beaconsRecyclerFrame.visibility = View.GONE
         }
+    }
+    //===============================================================
+    private fun recordTrack() {
+    }
+
+    private fun addSingleLocation() {
     }
 
 
