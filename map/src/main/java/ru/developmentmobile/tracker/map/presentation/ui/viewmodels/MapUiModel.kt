@@ -20,6 +20,18 @@ sealed class MapUiModel {
         var beacon: MapBeacon? = null
     ) : MapUiModel()
 
+    data class ClickTrackItem(
+        var track: MapTrack? = null
+    ) : MapUiModel()
+
+    data class ClickLocationItem(
+        var location: MapLocation? = null
+    ) : MapUiModel()
+
+    data class ClickBeaconItem(
+        var beacon: MapBeacon? = null
+    ) : MapUiModel()
+
     data class ShowProgressSectionData(
         var section: MapFragment.Section = MapFragment.Section.LOCATIONS,
         var isLoading: Boolean = false

@@ -46,6 +46,18 @@ class MapViewModel(
                     MapFragment.Section.BEACON -> loadBeacons()
                 }
             }
+            is MapUiEvents.ClickLocationItem -> {
+                cachedData.location = cachedData.locations.find { it.id == mapUiEvents.locationId }
+                clickLocationItem()
+            }
+            is MapUiEvents.ClickBeaconItem -> {
+                cachedData.beacon = mapUiEvents.beacon
+                clickBeaconItem()
+            }
+            is MapUiEvents.ClickTrackItem -> {
+                cachedData.track = mapUiEvents.track
+                clickTrackItem()
+            }
         }
     }
 
@@ -86,6 +98,28 @@ class MapViewModel(
                 postValue(MapUiModel.LoadSectionData())
                 delay(50)
                 postValue(MapUiModel.ShowProgressSectionData(cachedData.section, false))
+            }
+        }
+    }
+
+    private fun clickTrackItem() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (cachedData.section == MapFragment.Section.TRACKS) {
+                postValue(MapUiModel.ClickTrackItem())
+            }
+        }
+    }
+    private fun clickLocationItem() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (cachedData.section == MapFragment.Section.LOCATIONS) {
+                postValue(MapUiModel.ClickLocationItem())
+            }
+        }
+    }
+    private fun clickBeaconItem() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (cachedData.section == MapFragment.Section.BEACON) {
+                postValue(MapUiModel.ClickBeaconItem())
             }
         }
     }

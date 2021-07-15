@@ -20,6 +20,21 @@ class MapDataFactory {
                     beacon = data.beacon
                 )
             }
+            is MapUiModel.ClickTrackItem -> {
+                MapUiModel.ClickTrackItem(
+                    track = data.track
+                )
+            }
+            is MapUiModel.ClickLocationItem -> {
+                MapUiModel.ClickLocationItem(
+                    location = data.location
+                )
+            }
+            is MapUiModel.ClickBeaconItem -> {
+                MapUiModel.ClickBeaconItem(
+                    beacon = data.beacon
+                )
+            }
 
             is MapUiModel.ShowProgressSectionData -> {
                 mapUiModel

@@ -19,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.android.synthetic.main.view_beacons.view.*
 import kotlinx.android.synthetic.main.view_locations.view.*
@@ -106,6 +107,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         loadSectionDataLocations(mapUiModel.locations, mapUiModel.needToLoadMarkers)
                     Section.BEACON -> loadSectionDataBeacons(mapUiModel.beacons, mapUiModel.beacon)
                 }
+            }
+            is MapUiModel.ClickTrackItem -> {
+                mapUiModel.track?.let { clickTrackItem(it) }
+            }
+            is MapUiModel.ClickLocationItem -> {
+                mapUiModel.location?.let { clickLocationItem(it) }
+            }
+            is MapUiModel.ClickBeaconItem -> {
+                mapUiModel.beacon?.let { clickBeaconItem(it) }
             }
 
             is MapUiModel.ShowProgressSectionData -> {
@@ -231,6 +241,24 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun addSingleLocation() {
+    }
+
+    //====== click item ==================================================
+    private fun clickTrackItem(track: MapTrack) {
+        BottomSheetBehavior.from(sectionView.tracksBehaviorLayout).state =
+            BottomSheetBehavior.STATE_COLLAPSED
+    }
+    private fun clickLocationItem(location: MapLocation) {
+        BottomSheetBehavior.from(sectionView.locationsBehaviorLayout).state =
+            BottomSheetBehavior.STATE_COLLAPSED
+        val target = LatLng(location.location.latitude, location.location.longitude)
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(target))
+    }
+    private fun clickBeaconItem(beacon: MapBeacon) {
+        sectionView.observeBeaconButton.setColorFilter(
+            requireContext().getColor(R.color.colorPrimary)
+        )
+        (sectionView.beaconsRecycler.adapter as BeaconsAdapter).update(beacon)
     }
 
 
