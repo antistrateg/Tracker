@@ -35,8 +35,22 @@ class MapDataFactory {
                     beacon = data.beacon
                 )
             }
+            is MapUiModel.UpdateLocation -> {
+                MapUiModel.UpdateLocation(
+                    location = data.location
+                )
+            }
+            is MapUiModel.UpdateBeacon -> {
+                MapUiModel.UpdateBeacon(
+                    observeBeaconSwitch = data.observeBeaconSwitch,
+                    beacon = data.beacon
+                )
+            }
 
             is MapUiModel.ShowProgressSectionData -> {
+                mapUiModel
+            }
+            is MapUiModel.ShowProgressAddSingleLocation -> {
                 mapUiModel
             }
 

@@ -46,6 +46,10 @@ class MapViewModel(
                     MapFragment.Section.BEACON -> loadBeacons()
                 }
             }
+            is MapUiEvents.AddSingleLocation -> {
+                cachedData.location = mapUiEvents.location
+                addSingleLocation()
+            }
             is MapUiEvents.ClickLocationItem -> {
                 cachedData.location = cachedData.locations.find { it.id == mapUiEvents.locationId }
                 clickLocationItem()
@@ -65,7 +69,7 @@ class MapViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
             delay(50)
-            //cachedData.tracks = mapTrackInteractor.getTracks()
+            //TODO cachedData.tracks = mapTrackInteractor.getTracks()
             delay(1000)
             if (cachedData.section == MapFragment.Section.TRACKS) {
                 postValue(MapUiModel.LoadSectionData())
@@ -79,7 +83,7 @@ class MapViewModel(
             cachedData.needToLoadMarkers = needToLoadMarkers
             postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
             delay(50)
-            //cachedData.locations = listOf(MapLocation(1,MapPoint(0.0,0.0),"",""))// mapLocationInteractor.getLocations()
+            //TODO cachedData.locations = listOf(MapLocation(1,MapPoint(0.0,0.0),"",""))// mapLocationInteractor.getLocations()
             delay(1000)
             if (cachedData.section == MapFragment.Section.LOCATIONS) {
                 postValue(MapUiModel.LoadSectionData())
@@ -92,7 +96,7 @@ class MapViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
             delay(50)
-            //cachedData.beacons = mapBeaconInteractor.getBeacons()
+            //TODO cachedData.beacons = mapBeaconInteractor.getBeacons()
             delay(1000)
             if (cachedData.section == MapFragment.Section.BEACON) {
                 postValue(MapUiModel.LoadSectionData())
@@ -124,6 +128,25 @@ class MapViewModel(
         }
     }
 
+
+
+
+    private fun addSingleLocation() {
+        viewModelScope.launch(Dispatchers.IO) {
+            //load data
+            postValue(MapUiModel.ShowProgressAddSingleLocation(true))
+            delay(20)
+            //TODO mapLocationInteractor.addSingleLocation(cachedData.location!!)
+            delay(1000)
+            if (cachedData.section == MapFragment.Section.LOCATIONS) {
+                postValue(MapUiModel.ShowProgressAddSingleLocation(false))
+                delay(20)
+                postValue(MapUiModel.UpdateLocation())
+                delay(20)
+                loadLocations(false)
+            }
+        }
+    }
 
     private fun postValue(mapUiModel: MapUiModel) =
         uiDataMutable.postValue(factory.createUiModel(cachedData, mapUiModel))

@@ -32,8 +32,21 @@ sealed class MapUiModel {
         var beacon: MapBeacon? = null
     ) : MapUiModel()
 
+    data class UpdateLocation(
+        var location: MapLocation? = null
+    ) : MapUiModel()
+
+    data class UpdateBeacon(
+        var observeBeaconSwitch: Boolean = false,
+        var beacon: MapBeacon? = null
+    ) : MapUiModel()
+
     data class ShowProgressSectionData(
         var section: MapFragment.Section = MapFragment.Section.LOCATIONS,
+        var isLoading: Boolean = false
+    ) : MapUiModel()
+
+    data class ShowProgressAddSingleLocation(
         var isLoading: Boolean = false
     ) : MapUiModel()
 

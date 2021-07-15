@@ -2,6 +2,7 @@ package ru.developmentmobile.tracker.map.presentation.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,6 +36,7 @@ import ru.developmentmobile.tracker.map.presentation.ui.adapters.LocationsAdapte
 import ru.developmentmobile.tracker.map.presentation.ui.adapters.TracksAdapter
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiEvents
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiModel
+import java.io.IOException
 import java.util.*
 
 class MapFragment : Fragment(), OnMapReadyCallback {
@@ -117,6 +119,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             is MapUiModel.ClickBeaconItem -> {
                 mapUiModel.beacon?.let { clickBeaconItem(it) }
             }
+            is MapUiModel.UpdateLocation -> {
+                mapUiModel.location?.let { updateLocation(it) }
+            }
+            is MapUiModel.UpdateBeacon -> {
+                mapUiModel.beacon?.let { updateBeacon(it) }
+            }
 
             is MapUiModel.ShowProgressSectionData -> {
                 when (mapUiModel.section) {
@@ -136,6 +144,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         else sectionView.beaconsShimmerLoader.visibility = View.GONE
                     }
                 }
+            }
+            is MapUiModel.ShowProgressAddSingleLocation -> {
+                showProgressAddSingleLocation(mapUiModel.isLoading)
             }
         }
 
@@ -241,6 +252,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun addSingleLocation() {
+        val target = googleMap.cameraPosition.target
+        postEvent(
+            MapUiEvents.AddSingleLocation(
+                MapLocation(
+                    location = MapPoint(target.latitude, target.longitude),
+                    address = getAddressByTarget(target)
+                )
+            )
+        )
     }
 
     //====== click item ==================================================
@@ -261,6 +281,38 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         (sectionView.beaconsRecycler.adapter as BeaconsAdapter).update(beacon)
     }
 
+    private fun updateLocation(location: MapLocation) {
+        val target = LatLng(location.location.latitude, location.location.longitude)
+        googleMap.addMarker(MarkerOptions().position(target).title(location.address))
+    }
+    private fun updateBeacon(beacon: MapBeacon) {
+        sectionView.beaconTarget.visibility = View.VISIBLE
+        sectionView.observeBeaconButton.setColorFilter(
+            requireContext().getColor(R.color.colorRed)
+        )
+        val target = LatLng(beacon.location.latitude, beacon.location.longitude)
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 16f))
+    }
+
+    private fun showProgressAddSingleLocation(isLoading: Boolean) {
+        sectionView.addSingleLocationButton.isEnabled = isLoading.not()
+        if (isLoading) {
+            sectionView.addSingleLocationProgressBar.visibility = View.VISIBLE
+        } else {
+            sectionView.addSingleLocationProgressBar.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun getAddressByTarget(target: LatLng): String {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        try {
+            val addresses = geocoder.getFromLocation(target.latitude, target.longitude, 1)
+            return addresses[0].getAddressLine(0)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return resources.getString(R.string.address)
+        }
+    }
 
     private fun postEvent(event: MapUiEvents) = viewModel.uiEvents.postValue(event)
 
