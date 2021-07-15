@@ -59,6 +59,9 @@ dependencies {
     //Shimmer
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
+    //Network
+    implementation "com.google.code.gson:gson:2.8.6"
+
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.6.0'
