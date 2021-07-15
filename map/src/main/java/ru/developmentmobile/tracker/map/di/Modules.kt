@@ -6,13 +6,11 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import ru.developmentmobile.tracker.map.presentation.ui.MapViewModel
 
-
 fun injectFeatureMap() = loadFeature
 
 private val loadFeature by lazy {
     loadKoinModules(
         viewModelModule
-        //apiModule
     )
 }
 
@@ -22,6 +20,6 @@ val viewModelModule: Module = module {
     }
 }
 
-private val apiModule = module {
 
-}
+
+

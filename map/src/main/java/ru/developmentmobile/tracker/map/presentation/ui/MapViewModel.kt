@@ -1,5 +1,6 @@
 package ru.developmentmobile.tracker.map.presentation.ui
 
+import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -42,21 +43,56 @@ class MapViewModel(
                     MapFragment.Section.BEACON -> loadBeacons()
                 }
             }
-
         }
     }
 
     private fun loadTracks() {
-
+        viewModelScope.launch(Dispatchers.IO) {
+            postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
+            delay(50)
+            //cachedData.tracks = mapTrackInteractor.getTracks()
+            delay(1000)
+            if (cachedData.section == MapFragment.Section.TRACKS) {
+                postValue(MapUiModel.LoadSectionData())
+                delay(50)
+                postValue(MapUiModel.ShowProgressSectionData(cachedData.section, false))
+            }
+        }
     }
     private fun loadLocations(needToLoadMarkers: Boolean) {
-
+        viewModelScope.launch(Dispatchers.IO) {
+            cachedData.needToLoadMarkers = needToLoadMarkers
+            postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
+            delay(50)
+            //cachedData.locations = mapLocationInteractor.getLocations()
+            delay(1000)
+            if (cachedData.section == MapFragment.Section.LOCATIONS) {
+                postValue(MapUiModel.LoadSectionData())
+                delay(50)
+                postValue(MapUiModel.ShowProgressSectionData(cachedData.section, false))
+            }
+        }
     }
     private fun loadBeacons() {
-
+        viewModelScope.launch(Dispatchers.IO) {
+            postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
+            delay(50)
+            //cachedData.beacons = mapBeaconInteractor.getBeacons()
+            delay(1000)
+            if (cachedData.section == MapFragment.Section.BEACON) {
+                postValue(MapUiModel.LoadSectionData())
+                delay(50)
+                postValue(MapUiModel.ShowProgressSectionData(cachedData.section, false))
+            }
+        }
     }
 
 
     private fun postValue(mapUiModel: MapUiModel) =
         uiDataMutable.postValue(factory.createUiModel(cachedData, mapUiModel))
+
+    override fun onCleared() {
+        Log.d("TAG", "Cleared")
+        super.onCleared()
+    }
 }

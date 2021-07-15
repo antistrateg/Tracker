@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import org.koin.android.ext.android.inject
@@ -19,7 +18,11 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.fragment_map.*
+import kotlinx.android.synthetic.main.view_beacons.view.*
+import kotlinx.android.synthetic.main.view_locations.view.*
+import kotlinx.android.synthetic.main.view_tracks.view.*
 import ru.developmentmobile.tracker.map.domain.model.MapBeacon
 import ru.developmentmobile.tracker.map.domain.model.MapLocation
 import ru.developmentmobile.tracker.map.domain.model.MapTrack
@@ -31,11 +34,11 @@ import java.util.*
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
-    private val router: MapRouter by inject()
-    private val viewModel: MapViewModel by sharedViewModel()
+    //private val router: MapRouter by inject()
+    private val viewModel by sharedViewModel<MapViewModel>()
     private val updateDataObserver = Observer<MapUiModel> { handleUiData(it) }
 
-    lateinit var sectionView: View
+    private lateinit var sectionView: View
     private lateinit var googleMap: GoogleMap
     private lateinit var doIfLocationPermissionGranted: () -> Unit
 
@@ -79,6 +82,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun handleUiData(mapUiModel: MapUiModel) {
+        Log.d("TAG", mapUiModel.toString())
         when (mapUiModel) {
             is MapUiModel.CreateSection -> {
                 val section = mapUiModel.section
@@ -98,7 +102,28 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     Section.BEACON -> loadSectionDataBeacons(mapUiModel.beacons, mapUiModel.beacon)
                 }
             }
+
+            is MapUiModel.ShowProgressSectionData -> {
+                when (mapUiModel.section) {
+                    Section.TRACKS -> {
+                        if (mapUiModel.isLoading)
+                            sectionView.tracksShimmerLoader.visibility = View.VISIBLE
+                        else sectionView.tracksShimmerLoader.visibility = View.GONE
+                    }
+                    Section.LOCATIONS -> {
+                        if (mapUiModel.isLoading)
+                            sectionView.locationsShimmerLoader.visibility = View.VISIBLE
+                        else sectionView.locationsShimmerLoader.visibility = View.GONE
+                    }
+                    Section.BEACON -> {
+                        if (mapUiModel.isLoading)
+                            sectionView.beaconsShimmerLoader.visibility = View.VISIBLE
+                        else sectionView.beaconsShimmerLoader.visibility = View.GONE
+                    }
+                }
+            }
         }
+
     }
 
     //================== CREATE ===========================================
@@ -116,20 +141,68 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     //================== LOAD SECTION DATA =================================
     private fun loadSectionDataTracks(tracks: List<MapTrack>) {
+        //(sectionView.tracksRecycler.adapter as TracksAdapter).update(tracks)
 
+        if (tracks.isNotEmpty()) {
+            sectionView.tracksInformation.text =
+                resources.getString(R.string.tracks_amount, tracks.size)
+            sectionView.tracksDeleteButton.visibility = View.VISIBLE
+            sectionView.tracksRecyclerFrame.visibility = View.VISIBLE
+        } else {
+            sectionView.tracksInformation.text = resources.getString(R.string.no_tracks)
+            sectionView.tracksDeleteButton.visibility = View.GONE
+            sectionView.tracksRecyclerFrame.visibility = View.GONE
+        }
+
+        //запись трека
     }
     private fun loadSectionDataLocations(locations: List<MapLocation>, needToLoadMarkers: Boolean) {
+        //(sectionView.locationsRecycler.adapter as LocationsAdapter).update(locations)
 
+        if (locations.isNotEmpty()) {
+            sectionView.locationsInformation.text =
+                resources.getString(R.string.locations_amount, locations.size)
+            sectionView.locationsDeleteButton.visibility = View.VISIBLE
+            sectionView.locationsRecyclerFrame.visibility = View.VISIBLE
+        } else {
+            sectionView.locationsInformation.text = resources.getString(R.string.no_locations)
+            sectionView.locationsDeleteButton.visibility = View.GONE
+            sectionView.locationsRecyclerFrame.visibility = View.GONE
+        }
+
+        if (needToLoadMarkers) {
+            googleMap.clear()
+            for (location in locations)
+                googleMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(location.location.latitude, location.location.longitude))
+                        .title(location.address)
+                )
+        }
     }
     private fun loadSectionDataBeacons(beacons: List<MapBeacon>, selected: MapBeacon? = null) {
+        //(sectionView.beaconsRecycler.adapter as BeaconsAdapter).update(beacons, selected)
 
+        selected?.let {
+            sectionView.observeBeaconButton.setColorFilter(
+                requireContext().getColor(R.color.colorPrimary)
+            )
+        }
+
+        if (beacons.isNotEmpty()) {
+            sectionView.beaconsInformation.text =
+                resources.getString(R.string.beacons_amount, beacons.size)
+            sectionView.beaconsRecyclerFrame.visibility = View.VISIBLE
+        } else {
+            sectionView.beaconsInformation.text = resources.getString(R.string.no_beacons)
+            sectionView.beaconsRecyclerFrame.visibility = View.GONE
+        }
     }
 
 
     private fun postEvent(event: MapUiEvents) = viewModel.uiEvents.postValue(event)
 
     private fun checkLocationPermission() {
-
         val permissionStatus =
             ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
         if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
@@ -179,6 +252,4 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         private const val DEFAULT_LOCATION_LAT: Double = 55.7561
         private const val DEFAULT_LOCATION_LNG: Double = 37.6186
     }
-
-
 }

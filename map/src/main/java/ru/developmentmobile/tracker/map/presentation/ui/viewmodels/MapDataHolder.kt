@@ -6,7 +6,7 @@ import ru.developmentmobile.tracker.map.domain.model.MapTrack
 import ru.developmentmobile.tracker.map.presentation.ui.MapFragment
 
 data class MapDataHolder(
-    var section: MapFragment.Section = MapFragment.Section.TRACKS,
+    var section: MapFragment.Section = MapFragment.Section.LOCATIONS,
     var track: MapTrack? = null,
     var tracks: List<MapTrack> = emptyList(),
     var location: MapLocation? = null,

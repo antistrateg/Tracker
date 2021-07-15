@@ -20,6 +20,11 @@ class MapDataFactory {
                     beacon = data.beacon
                 )
             }
+
+            is MapUiModel.ShowProgressSectionData -> {
+                mapUiModel
+            }
+
         }
 
 }

@@ -4,4 +4,13 @@
     <string name="tracks">Треки</string>
     <string name="locations">Локации</string>
     <string name="beacons">Маячки</string>
+
+    <string name="tracks_amount">Количество доступных треков: %1$d</string>
+    <string name="no_tracks">Нет треков. Вы можете записать новый трек</string>
+
+    <string name="locations_amount">Количество доступных локаций: %1$d</string>
+    <string name="no_locations">Нет локаций. Вы можете добавить новую</string>
+
+    <string name="beacons_amount">Количество доступных маячков: %1$d</string>
+    <string name="no_beacons">Нет маячков</string>
 </resources>
