@@ -125,6 +125,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             is MapUiModel.UpdateBeacon -> {
                 mapUiModel.beacon?.let { updateBeacon(it) }
             }
+            is MapUiModel.BeaconObserveStopped -> {
+                beaconObserveStopped()
+            }
 
             is MapUiModel.ShowProgressSectionData -> {
                 when (mapUiModel.section) {
@@ -148,6 +151,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             is MapUiModel.ShowProgressAddSingleLocation -> {
                 showProgressAddSingleLocation(mapUiModel.isLoading)
             }
+            //is MapUiModel.Error -> { }
         }
 
     }
@@ -190,7 +194,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     //================== LOAD SECTION DATA =================================
     private fun loadSectionDataTracks(tracks: List<MapTrack>) {
         (sectionView.tracksRecycler.adapter as TracksAdapter).update(tracks)
-
         if (tracks.isNotEmpty()) {
             sectionView.tracksInformation.text =
                 resources.getString(R.string.tracks_amount, tracks.size)
@@ -201,13 +204,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             sectionView.tracksDeleteButton.visibility = View.GONE
             sectionView.tracksRecyclerFrame.visibility = View.GONE
         }
-
         //запись трека
     }
+
     private fun loadSectionDataLocations(locations: List<MapLocation>, needToLoadMarkers: Boolean) {
         Log.d("TAG", locations.toString())
         (sectionView.locationsRecycler.adapter as LocationsAdapter).update(locations)
-
         if (locations.isNotEmpty()) {
             sectionView.locationsInformation.text =
                 resources.getString(R.string.locations_amount, locations.size)
@@ -218,7 +220,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             sectionView.locationsDeleteButton.visibility = View.GONE
             sectionView.locationsRecyclerFrame.visibility = View.GONE
         }
-
         if (needToLoadMarkers) {
             googleMap.clear()
             for (location in locations)
@@ -229,15 +230,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 )
         }
     }
+
     private fun loadSectionDataBeacons(beacons: List<MapBeacon>, selected: MapBeacon? = null) {
         (sectionView.beaconsRecycler.adapter as BeaconsAdapter).update(beacons, selected)
-
         selected?.let {
             sectionView.observeBeaconButton.setColorFilter(
                 requireContext().getColor(R.color.colorPrimary)
             )
         }
-
         if (beacons.isNotEmpty()) {
             sectionView.beaconsInformation.text =
                 resources.getString(R.string.beacons_amount, beacons.size)
@@ -268,12 +268,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         BottomSheetBehavior.from(sectionView.tracksBehaviorLayout).state =
             BottomSheetBehavior.STATE_COLLAPSED
     }
+
     private fun clickLocationItem(location: MapLocation) {
         BottomSheetBehavior.from(sectionView.locationsBehaviorLayout).state =
             BottomSheetBehavior.STATE_COLLAPSED
         val target = LatLng(location.location.latitude, location.location.longitude)
         googleMap.animateCamera(CameraUpdateFactory.newLatLng(target))
     }
+
     private fun clickBeaconItem(beacon: MapBeacon) {
         sectionView.observeBeaconButton.setColorFilter(
             requireContext().getColor(R.color.colorPrimary)
@@ -285,6 +287,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val target = LatLng(location.location.latitude, location.location.longitude)
         googleMap.addMarker(MarkerOptions().position(target).title(location.address))
     }
+
     private fun updateBeacon(beacon: MapBeacon) {
         sectionView.beaconTarget.visibility = View.VISIBLE
         sectionView.observeBeaconButton.setColorFilter(
@@ -292,6 +295,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         )
         val target = LatLng(beacon.location.latitude, beacon.location.longitude)
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(target, 16f))
+    }
+
+    private fun beaconObserveStopped() {
+        sectionView.beaconTarget.visibility = View.GONE
+        sectionView.observeBeaconButton.setColorFilter(
+            requireContext().getColor(R.color.colorPrimary)
+        )
     }
 
     private fun showProgressAddSingleLocation(isLoading: Boolean) {

@@ -46,6 +46,9 @@ class MapDataFactory {
                     beacon = data.beacon
                 )
             }
+            is MapUiModel.BeaconObserveStopped -> {
+                MapUiModel.BeaconObserveStopped
+            }
 
             is MapUiModel.ShowProgressSectionData -> {
                 mapUiModel
@@ -53,7 +56,7 @@ class MapDataFactory {
             is MapUiModel.ShowProgressAddSingleLocation -> {
                 mapUiModel
             }
-
+            is MapUiModel.Error -> MapUiModel.Error
         }
 
 }

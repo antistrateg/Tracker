@@ -50,4 +50,8 @@ sealed class MapUiModel {
         var isLoading: Boolean = false
     ) : MapUiModel()
 
+    object BeaconObserveStopped: MapUiModel()
+
+    object Error : MapUiModel()
+
 }

@@ -1,13 +1,10 @@
 package ru.developmentmobile.tracker.map.presentation.ui
 
-import android.location.Location
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.developmentmobile.tracker.map.domain.model.MapLocation
-import ru.developmentmobile.tracker.map.domain.model.MapPoint
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapDataFactory
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapDataHolder
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiEvents
@@ -61,6 +58,23 @@ class MapViewModel(
             is MapUiEvents.ClickTrackItem -> {
                 cachedData.track = mapUiEvents.track
                 clickTrackItem()
+            }
+            is MapUiEvents.DeleteLocation -> {
+                cachedData.location = cachedData.locations.find { it.id == mapUiEvents.locationId }
+                deleteLocation()
+            }
+            is MapUiEvents.DeleteLocations -> {
+                deleteLocations()
+            }
+            is MapUiEvents.DeleteTrack -> {
+                cachedData.track = mapUiEvents.track
+                deleteTrack()
+            }
+            is MapUiEvents.DeleteTracks -> {
+                deleteTracks()
+            }
+            is MapUiEvents.ObserveBeacon -> {
+                observeBeacon()
             }
         }
     }
@@ -128,9 +142,6 @@ class MapViewModel(
         }
     }
 
-
-
-
     private fun addSingleLocation() {
         viewModelScope.launch(Dispatchers.IO) {
             //load data
@@ -145,6 +156,61 @@ class MapViewModel(
                 delay(20)
                 loadLocations(false)
             }
+        }
+    }
+
+    private fun deleteTrack() {
+        viewModelScope.launch(Dispatchers.IO) {
+            //TODO mapTrackInteractor.deleteTrack(cachedData.track!!.id)
+            if (cachedData.section == MapFragment.Section.TRACKS) {
+                loadTracks()
+            }
+        }
+    }
+
+    private fun deleteTracks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            //TODO mapTrackInteractor.deleteTracks()
+            if (cachedData.section == MapFragment.Section.TRACKS) {
+                loadTracks()
+            }
+        }
+    }
+
+    private fun deleteLocation() {
+        viewModelScope.launch(Dispatchers.IO) {
+            //TODO mapLocationInteractor.deleteLocation(cachedData.location!!.id)
+            if (cachedData.section == MapFragment.Section.LOCATIONS) {
+                loadLocations(true)
+            }
+        }
+    }
+
+    private fun deleteLocations() {
+        viewModelScope.launch(Dispatchers.IO) {
+            //TODO mapLocationInteractor.deleteLocations()
+            if (cachedData.section == MapFragment.Section.LOCATIONS) {
+                loadLocations(true)
+            }
+        }
+    }
+
+    private fun observeBeacon() {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            cachedData.beacon?.let {
+                cachedData.observeBeaconSwitch = cachedData.observeBeaconSwitch.not()
+                while (cachedData.observeBeaconSwitch) {
+                    //spy the beacon
+                    //TODO val request = mapBeaconInteractor.getBeacon(it.id)
+
+                    if (cachedData.section == MapFragment.Section.BEACON) postValue(MapUiModel.UpdateBeacon())
+                    else cachedData.observeBeaconSwitch = false
+                    delay(3000)
+                }
+                if (cachedData.section == MapFragment.Section.BEACON) postValue(MapUiModel.BeaconObserveStopped)
+            }
+
         }
     }
 
