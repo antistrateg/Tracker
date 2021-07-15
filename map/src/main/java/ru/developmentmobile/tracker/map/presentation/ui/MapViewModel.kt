@@ -9,8 +9,14 @@ import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapDataFactor
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapDataHolder
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiEvents
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiModel
+import ru.developmentmobile.tracker.map.domain.interactor.MapBeaconInteractor
+import ru.developmentmobile.tracker.map.domain.interactor.MapLocationInteractor
+import ru.developmentmobile.tracker.map.domain.interactor.MapTrackInteractor
 
 class MapViewModel(
+    private val mapTrackInteractor: MapTrackInteractor,
+    private val mapLocationInteractor: MapLocationInteractor,
+    private val mapBeaconInteractor: MapBeaconInteractor
 ) : ViewModel() {
 
     private val factory = MapDataFactory()
