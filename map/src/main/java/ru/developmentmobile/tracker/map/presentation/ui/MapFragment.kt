@@ -28,13 +28,16 @@ import ru.developmentmobile.tracker.map.domain.model.MapLocation
 import ru.developmentmobile.tracker.map.domain.model.MapTrack
 import ru.developmentmobile.tracker.map.extension.inflateSectionView
 import ru.developmentmobile.tracker.map.presentation.router.MapRouter
+import ru.developmentmobile.tracker.map.presentation.ui.adapters.BeaconsAdapter
+import ru.developmentmobile.tracker.map.presentation.ui.adapters.LocationsAdapter
+import ru.developmentmobile.tracker.map.presentation.ui.adapters.TracksAdapter
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiEvents
 import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiModel
 import java.util.*
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
-    //private val router: MapRouter by inject()
+    private val router: MapRouter by inject()
     private val viewModel by sharedViewModel<MapViewModel>()
     private val updateDataObserver = Observer<MapUiModel> { handleUiData(it) }
 
@@ -141,7 +144,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     //================== LOAD SECTION DATA =================================
     private fun loadSectionDataTracks(tracks: List<MapTrack>) {
-        //(sectionView.tracksRecycler.adapter as TracksAdapter).update(tracks)
+        (sectionView.tracksRecycler.adapter as TracksAdapter).update(tracks)
 
         if (tracks.isNotEmpty()) {
             sectionView.tracksInformation.text =
@@ -157,7 +160,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         //запись трека
     }
     private fun loadSectionDataLocations(locations: List<MapLocation>, needToLoadMarkers: Boolean) {
-        //(sectionView.locationsRecycler.adapter as LocationsAdapter).update(locations)
+        (sectionView.locationsRecycler.adapter as LocationsAdapter).update(locations)
 
         if (locations.isNotEmpty()) {
             sectionView.locationsInformation.text =
@@ -181,7 +184,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
     private fun loadSectionDataBeacons(beacons: List<MapBeacon>, selected: MapBeacon? = null) {
-        //(sectionView.beaconsRecycler.adapter as BeaconsAdapter).update(beacons, selected)
+        (sectionView.beaconsRecycler.adapter as BeaconsAdapter).update(beacons, selected)
 
         selected?.let {
             sectionView.observeBeaconButton.setColorFilter(
