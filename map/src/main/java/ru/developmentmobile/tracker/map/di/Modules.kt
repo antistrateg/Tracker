@@ -37,9 +37,9 @@ val viewModelModule: Module = module {
 
 private val apiModule: Module = module {
 
-    factory { MapTrackInteractor() }
-    factory { MapLocationInteractor() }
-    factory { MapBeaconInteractor() }
+    factory { MapTrackInteractor(mapRepository = get()) }
+    factory { MapLocationInteractor(mapRepository = get()) }
+    factory { MapBeaconInteractor(mapRepository = get()) }
 
     factory <MapRepository> {
         MapRepositoryImpl(
