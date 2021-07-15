@@ -60,7 +60,10 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
     //Network
-    implementation "com.google.code.gson:gson:2.8.6"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.google.code.gson:gson:$gson_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
 
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
