@@ -45,8 +45,9 @@ class LocationsAdapter(
             with(view) {
                 locationAddress.text = location.address
                 locationCoordinates.text =
-                    resources.getString(R.string.latitude_longitude,
-                        location.location.latitude, location.location.longitude)
+                        resources.getString(R.string.latitude_longitude,
+                        location.location.latitude.toString(),
+                            location.location.longitude.toString())
             }
 
             view.setOnClickListener { itemClick(location.id) }
