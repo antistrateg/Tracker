@@ -12,6 +12,8 @@ import ru.developmentmobile.tracker.map.presentation.ui.viewmodels.MapUiModel
 import ru.developmentmobile.tracker.map.domain.interactor.MapBeaconInteractor
 import ru.developmentmobile.tracker.map.domain.interactor.MapLocationInteractor
 import ru.developmentmobile.tracker.map.domain.interactor.MapTrackInteractor
+import ru.developmentmobile.tracker.map.network.Failure
+import ru.developmentmobile.tracker.map.network.Success
 
 class MapViewModel(
     private val mapTrackInteractor: MapTrackInteractor,
@@ -89,7 +91,7 @@ class MapViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
             delay(50)
-            //TODO cachedData.tracks = mapTrackInteractor.getTracks()
+            cachedData.tracks = mapTrackInteractor.getTracks()
             delay(1000)
             if (cachedData.section == MapFragment.Section.TRACKS) {
                 postValue(MapUiModel.LoadSectionData())
@@ -103,7 +105,7 @@ class MapViewModel(
             cachedData.needToLoadMarkers = needToLoadMarkers
             postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
             delay(50)
-            //TODO cachedData.locations = listOf(MapLocation(1,MapPoint(0.0,0.0),"",""))// mapLocationInteractor.getLocations()
+            cachedData.locations = mapLocationInteractor.getLocations()
             delay(1000)
             if (cachedData.section == MapFragment.Section.LOCATIONS) {
                 postValue(MapUiModel.LoadSectionData())
@@ -116,7 +118,14 @@ class MapViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             postValue(MapUiModel.ShowProgressSectionData(cachedData.section, true))
             delay(50)
-            //TODO cachedData.beacons = mapBeaconInteractor.getBeacons()
+            when (val request = mapBeaconInteractor.getBeacons()) {
+                is Success -> {
+                    cachedData.beacons = request.data
+                }
+                is Failure -> {
+                    request.error
+                }
+            }
             delay(1000)
             if (cachedData.section == MapFragment.Section.BEACON) {
                 postValue(MapUiModel.LoadSectionData())
@@ -153,7 +162,7 @@ class MapViewModel(
             //load data
             postValue(MapUiModel.ShowProgressAddSingleLocation(true))
             delay(20)
-            //TODO mapLocationInteractor.addSingleLocation(cachedData.location!!)
+            mapLocationInteractor.addSingleLocation(cachedData.location!!)
             delay(1000)
             if (cachedData.section == MapFragment.Section.LOCATIONS) {
                 postValue(MapUiModel.ShowProgressAddSingleLocation(false))
@@ -167,7 +176,7 @@ class MapViewModel(
 
     private fun deleteTrack() {
         viewModelScope.launch(Dispatchers.IO) {
-            //TODO mapTrackInteractor.deleteTrack(cachedData.track!!.id)
+            mapTrackInteractor.deleteTrack(cachedData.track!!.id)
             if (cachedData.section == MapFragment.Section.TRACKS) {
                 loadTracks()
             }
@@ -176,7 +185,7 @@ class MapViewModel(
 
     private fun deleteTracks() {
         viewModelScope.launch(Dispatchers.IO) {
-            //TODO mapTrackInteractor.deleteTracks()
+            mapTrackInteractor.deleteTracks()
             if (cachedData.section == MapFragment.Section.TRACKS) {
                 loadTracks()
             }
@@ -185,7 +194,7 @@ class MapViewModel(
 
     private fun deleteLocation() {
         viewModelScope.launch(Dispatchers.IO) {
-            //TODO mapLocationInteractor.deleteLocation(cachedData.location!!.id)
+            mapLocationInteractor.deleteLocation(cachedData.location!!.id)
             if (cachedData.section == MapFragment.Section.LOCATIONS) {
                 loadLocations(true)
             }
@@ -194,7 +203,7 @@ class MapViewModel(
 
     private fun deleteLocations() {
         viewModelScope.launch(Dispatchers.IO) {
-            //TODO mapLocationInteractor.deleteLocations()
+            mapLocationInteractor.deleteLocations()
             if (cachedData.section == MapFragment.Section.LOCATIONS) {
                 loadLocations(true)
             }
@@ -203,20 +212,23 @@ class MapViewModel(
 
     private fun observeBeacon() {
         viewModelScope.launch(Dispatchers.IO) {
-
             cachedData.beacon?.let {
                 cachedData.observeBeaconSwitch = cachedData.observeBeaconSwitch.not()
                 while (cachedData.observeBeaconSwitch) {
                     //spy the beacon
-                    //TODO val request = mapBeaconInteractor.getBeacon(it.id)
-
+                    when (val request = mapBeaconInteractor.getBeacon(it.id)) {
+                        is Success -> {
+                            cachedData.beacon = request.data
+                        }
+                        is Failure -> {
+                        }
+                    }
                     if (cachedData.section == MapFragment.Section.BEACON) postValue(MapUiModel.UpdateBeacon())
                     else cachedData.observeBeaconSwitch = false
                     delay(3000)
                 }
                 if (cachedData.section == MapFragment.Section.BEACON) postValue(MapUiModel.BeaconObserveStopped)
             }
-
         }
     }
 

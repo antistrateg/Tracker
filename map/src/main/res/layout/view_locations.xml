@@ -26,8 +26,10 @@
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="104dp"
         android:src="@drawable/ic_add"
+        app:tint="#FFDF0000"
         app:backgroundTint="#FFF"
-        app:rippleColor="#FF0" />
+        app:rippleColor="@color/button_ripple" />
+
 
     <ProgressBar
         android:id="@+id/addSingleLocationProgressBar"

@@ -92,7 +92,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         Log.d("TAG", mapUiModel.toString())
         when (mapUiModel) {
             is MapUiModel.CreateSection -> {
-                //googleMap.clear()
+                googleMap.clear()
                 val section = mapUiModel.section
                 sectionView = requireContext().inflateSectionView(section.layout, section_container)
                 when (section) {

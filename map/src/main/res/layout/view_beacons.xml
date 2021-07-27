@@ -28,8 +28,9 @@
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="104dp"
         android:src="@drawable/ic_radar"
+        app:tint="#FF999999"
         app:backgroundTint="#FFF"
-        app:rippleColor="#CCC" />
+        app:rippleColor="@color/button_ripple" />
 
     <LinearLayout
         android:id="@+id/beaconsBehaviorLayout"
